@@ -1,0 +1,12 @@
+{
+  "_note": "EXAMPLE student for testing, not a real person. B.E. CS, admitted 2025, now in 2nd year 1st semester.",
+  "campus": "Pilani",
+  "admission_year": 2025,
+  "programme": "B.E. Computer Science",
+  "current_semester": 3,
+  "completed": ["BIO F101", "CHEM F101", "PHY F101", "MATH F101", "BITS F101", "BITS K101", "BITS F103",
+                "MATH F102", "MATH F113", "CS F111", "BITS F111", "BITS F112", "EEE F111", "BITS F102"],
+  "current": ["MATH F211", "CS F214", "CS F222", "CS F213", "CS F215"],
+  "minor": null,
+  "interests": ["machine learning", "systems"]
+}

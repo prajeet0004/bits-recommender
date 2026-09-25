@@ -1,0 +1,22 @@
+{
+  "_note": "Programme requirements typed in by hand from the Bulletin, with page references. These numbers sit in messy two-column tables; copying ~10 numbers per programme by hand and citing the page is more reliable than parsing them. Course LISTS are not here - they come from course_lists.json.",
+
+  "B.E. Computer Science": {
+    "course_list_key": "COMPUTER SCIENCE",
+    "discipline_prefixes": ["CS"],
+    "requirements": {
+      "CDC":  {"units": 48, "courses": 14, "source": "bulletin.pdf p.217 (IV-9)"},
+      "DEL":  {"units": 12, "courses": 4,  "source": "bulletin.pdf p.217 (IV-9)"},
+      "HUEL": {"units": 8,  "courses": 3,  "source": "bulletin.pdf p.209 (IV-1)"},
+      "OPEL": {"units": 15, "source": "bulletin.pdf p.209 (IV-1): 129 coursework units - 54 general institutional - 60 discipline"}
+    },
+    "gir_courses": {
+      "_source": "bulletin.pdf p.217 (IV-9) semester-wise pattern, years I-II",
+      "Science Foundation":      ["BIO F101", "CHEM F101", "PHY F101"],
+      "Mathematics Foundation":  ["MATH F101", "MATH F102", "MATH F113", "MATH F211"],
+      "Engineering Foundation":  ["EEE F111", "BITS F111"],
+      "Technical Arts":          ["CS F111", "BITS F103", "BITS F112"],
+      "General Awareness":       ["BITS F101", "BITS K101", "BITS F102", "BITS F225", ["ECON F211", "MGTS F211"]]
+    }
+  }
+}
