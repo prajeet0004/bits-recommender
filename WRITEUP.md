@@ -122,7 +122,9 @@ Adding them exposed problems that one programme never would, so the engine now
   for Biotechnology, Electronics & Computer, and Robotics & Industrial Automation, whose
   CDCs likely run under other codes via the (not yet parsed) equivalent-courses table.
 
-These are shown to the student as warnings rather than hidden. Dual degrees combine two
+These are shown to the student as warnings rather than hidden.
+
+Following up the Environmental & Sustainability warning showed the cause was the bulletin itself, not the parser: its course list (p.322) shows ENVS F232 where the semester pattern (p.222) shows ENVS F323, and omits CHE F211, BITS F240 and ENVS F324. These are fixed with a small `core_corrections` entry in `programmes.json` that cites both pages, so the correction is visible and traceable rather than silently edited into the parsed data. The count now matches (16). Dual degrees combine two
 programmes' discipline requirements with sharing rules (IV-1), which needs real logic,
 not just data, so they are out of scope and give a clear "not supported" message.
 
@@ -169,7 +171,27 @@ Definitions used:
   The first version only used a yes/no `has_project` flag, and every HUEL it returned had
   a 30% midsem and no project at all.
 
-## 8. What the data can and can't answer
+## 8. Dashboard
+
+Streamlit, chosen for the deadline: it calls `core/` directly with no API layer, and it
+covers everything required (profile form, live requirements, question box). The trade-off
+is a limited look; a Next.js frontend would look better but take several more days, and
+`core/` would stay unchanged either way because the UI only calls its functions.
+
+- **Profile:** course pickers are filled from the parsed data, so course codes can't be
+  mistyped. Profiles save as JSON in `data/students/`.
+- **Requirement ledger:** CDC / DEL / HUEL / OPEL shown as segmented tracks, recomputed
+  from `rules.academic_state()` on every edit, with the bulletin pages they come from.
+- **Programme warnings** from the cross-check are shown above the question box.
+- **Results:** each course shows the requirement it fills, each check as a coloured
+  status (yes / partly / not verified) with the evidence, evaluation scheme, lecture
+  slots, warnings and sources.
+
+A bug caught while testing: widgets without explicit keys kept their old values when a
+different profile was loaded, and one test run saved a question into the interests field.
+Every profile widget is now keyed to the loaded profile.
+
+## 9. What the data can and can't answer
 
 | Property | Known | Not stated |
 |---|---|---|
@@ -181,7 +203,7 @@ Most handouts say nothing about attendance. So "an OPEL with no attendance requi
 can only be answered with confidence for about half the courses; for the rest the system
 must say "not stated in the handout" — which is what the task asks for.
 
-## 9. Known gaps
+## 10. Known gaps
 
 - Prerequisites not verified (data missing).
 - Equivalent-course table not parsed yet.

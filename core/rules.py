@@ -42,7 +42,16 @@ class Catalog:
                 f"'{name}' is not supported yet (dual degrees are not supported). "
                 f"Supported: {', '.join(self.supported_programmes())}")
         rules = self.programmes[name]
-        return rules, self.course_lists[rules["course_list_key"]]
+        plist = self.course_lists[rules["course_list_key"]]
+        fix = rules.get("core_corrections")
+        if fix:
+            # hand corrections where two bulletin pages disagree (source kept in programmes.json)
+            core = [dict(c, code=fix["replace"].get(c["code"], c["code"])) for c in plist["core"]]
+            have = {c["code"] for c in core}
+            core += [{"code": c, "title": "", "units": None, "source": {"doc": "bulletin.pdf",
+                      "note": fix["_source"]}} for c in fix["add"] if c not in have]
+            plist = dict(plist, core=core)
+        return rules, plist
 
     def programme_warnings(self, name):
         """Cross-check two sources that were extracted independently:

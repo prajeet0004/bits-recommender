@@ -726,8 +726,20 @@
    ]
   },
   "needs_verification": [
-   "semester pattern also shows BITS F113, BITS F114, PHY F102 in years I-II; standard GIR used."
-  ]
+   "semester pattern also shows BITS F113, BITS F114, PHY F102 in years I-II; standard GIR used.",
+   "CDC list corrected by hand from the semester pattern: the course list shows ENVS F232 where the pattern shows ENVS F323, and omits CHE F211, BITS F240 and ENVS F324."
+  ],
+  "core_corrections": {
+   "_source": "bulletin.pdf p.222 (IV-14) semester-wise pattern vs course list p.322. The list has 13 CDCs; the pattern has 16.",
+   "add": [
+    "CHE F211",
+    "BITS F240",
+    "ENVS F324"
+   ],
+   "replace": {
+    "ENVS F232": "ENVS F323"
+   }
+  }
  },
  "B.E. Mechanical": {
   "course_list_key": "MECHANICAL ENGINEERING",
