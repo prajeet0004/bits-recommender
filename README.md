@@ -16,8 +16,8 @@ understanding the student's query, and writing the explanation.
 | Bulletin parser (CDC / DEL / HUEL lists) | ✅ done |
 | Handout parser (LLM + code validation) | ✅ done, 538/540 extracted |
 | Rules engine (remaining requirements, eligibility) | ✅ done for B.E. Computer Science |
-| Query layer (LLM → filters → ranked results) | ⏳ next |
-| Dashboard | ⏳ planned |
+| Query layer (LLM → filters → ranked results) | ✅ done, CLI only |
+| Dashboard | ⏳ next |
 | Timetable clash checking (brownie point) | ⏳ planned |
 
 ## Setup
@@ -67,6 +67,9 @@ python ingest/parse_handouts.py data/raw/handouts data/processed/handouts.jsonl
 
 # 4. Remaining requirements + eligible courses for a student profile
 python core/rules.py data/students/example_cs_2025.json
+
+# 5. Ask a question (2 LLM calls: understand the query, score interests)
+python -m core.recommend data/students/example_cs_2025.json "Suggest DELs related to AI with no midsem"
 ```
 
 Step 3 saves after every handout. If it stops (quota, network), run the same command
@@ -81,6 +84,9 @@ ingest/
   parse_handouts.py         handouts -> evaluation, midsem, makeup, attendance, topics
 core/
   rules.py                  deterministic: remaining requirements, eligible courses
+  query.py                  LLM: question -> structured preferences (sees no course data)
+  recommend.py              eligible set -> handout checks -> LLM interest scores -> results
+  llm.py                    Gemini wrapper with model fallback
 data/
   rules/programmes.json     requirement numbers per programme, with bulletin page refs
   students/                 example student profiles

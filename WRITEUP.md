@@ -106,7 +106,50 @@ programme sitting in messy tables, so copying and citing them is more reliable t
 parsing. Course **lists** still come from the parsed bulletin, so nothing about which
 courses count is hardcoded.
 
-## 7. What the data can and can't answer
+## 7. Query layer
+
+A question goes through five steps, and the LLM is used in exactly two:
+
+1. **Rules engine (code)** builds the eligible set for the student.
+2. **Query parsing (LLM)** turns the question into a fixed `Preferences` form
+   (category, interests, no_midsem, no_attendance_requirement, lenient_makeup, ...).
+   The LLM sees no course data here, so it cannot pick or invent courses.
+3. **Handout checks (code).** Each request becomes a three-way check per course:
+   `yes`, `no` or `not verified`. `no` removes the course; `not verified` keeps it,
+   says so, and ranks it lower.
+4. **Interest scoring (LLM).** The LLM scores only the courses code already found eligible,
+   using their titles and handout topics. Any course code it returns that isn't in that
+   list is discarded. If the LLM call fails, a keyword match is used instead.
+5. **Output (code).** Each result states the requirement it fills, eligibility, the checks
+   with evidence, evaluation scheme, lecture slots, warnings and source documents.
+
+Explanations are built by code from stored facts, not written freely by the LLM. The only
+LLM-written text in an answer is the short "why it matches your interest" line. This keeps
+the answer traceable, which matters more here than fluent prose.
+
+**Checks have four outcomes, not two.** The first real run showed that yes/no was too
+coarse: "OPEL with no attendance requirement" returned courses whose handout says
+*"each student is expected to attend all classes"*, because attendance carried no marks.
+That is not what a student means by "no attendance requirement". So each check is now:
+
+| Status | Meaning | Effect |
+|---|---|---|
+| yes | clearly satisfies the request | ranked first |
+| partly | satisfies it with a catch (e.g. no marks, but attendance expected) | kept, ranked lower, catch shown |
+| not verified | handout doesn't say | kept, ranked lower, stated as unverified |
+| no | conflicts with the request | removed |
+
+Definitions used:
+- **No attendance requirement:** attendance carries no marks *and* the handout doesn't say
+  attendance is expected or governed by institute guidelines. Otherwise "partly".
+- **Lenient make-up:** make-up offered without prior permission. If it's only for genuine
+  reasons (the normal BITS rule), "partly".
+- **Prefers project-based:** a *preference*, not a filter. Courses are ranked by the share
+  of marks from projects, assignments and presentations, computed from the evaluation table.
+  The first version only used a yes/no `has_project` flag, and every HUEL it returned had
+  a 30% midsem and no project at all.
+
+## 8. What the data can and can't answer
 
 | Property | Known | Not stated |
 |---|---|---|
@@ -118,7 +161,7 @@ Most handouts say nothing about attendance. So "an OPEL with no attendance requi
 can only be answered with confidence for about half the courses; for the rest the system
 must say "not stated in the handout" — which is what the task asks for.
 
-## 8. Known gaps
+## 9. Known gaps
 
 - Prerequisites not verified (data missing).
 - Equivalent-course table not parsed yet.
