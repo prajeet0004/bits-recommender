@@ -15,7 +15,7 @@ understanding the student's query, and writing the explanation.
 | Timetable parser | ✅ done |
 | Bulletin parser (CDC / DEL / HUEL lists) | ✅ done |
 | Handout parser (LLM + code validation) | ✅ done, 538/540 extracted |
-| Rules engine (remaining requirements, eligibility) | ✅ done for B.E. Computer Science |
+| Rules engine (remaining requirements, eligibility) | ✅ done for all 17 single-degree B.E. programmes |
 | Query layer (LLM → filters → ranked results) | ✅ done, CLI only |
 | Dashboard | ⏳ next |
 | Timetable clash checking (brownie point) | ⏳ planned |
@@ -120,8 +120,14 @@ Attendance is stated in only 45% of handouts. For the rest, the system answers
 
 - **Prerequisites are not verified.** The timetable points to an external website, and the
   bulletin lists prerequisites for only a few courses. Every recommendation says so.
-- **Only B.E. Computer Science** has its requirement numbers in `programmes.json` so far.
-  Adding a programme means adding one entry with page references; no code changes.
+- **Supported programmes:** the 17 single-degree B.E. programmes. Dual degrees, B.Pharm,
+  M.Sc. and BBA are not configured; choosing one gives a clear "not supported" message.
+  Adding a programme means adding one entry to `programmes.json`, no code changes.
+- **Programme data cross-check.** For 7 programmes the system shows a warning, found by
+  comparing independently extracted sources: EEE (15 CDCs parsed vs 14 in the pattern,
+  one is an either/or), Environmental & Sustainability (13 parsed vs 16), and
+  Biotechnology, Electronics & Computer, Robotics (none of their CDC codes appear in this
+  semester's timetable).
 - **Equivalent courses** (timetable pp. 121–127) are not parsed yet, so a course taken
   under an old code is not yet recognised.
 - **Two handouts are scanned images** (MAC F214, MATH F214) and have no extracted data.

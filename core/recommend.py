@@ -168,7 +168,7 @@ def recommend(student, pref: Preferences, catalog=None, handouts=None):
     eligible = rules.eligible_courses(student, catalog, state)
     rem = state["remaining"]
     offered = catalog.offered(student["admission_year"])
-    notes = []
+    notes = [f"Programme data: {w}" for w in state["warnings"]]
 
     cats = [pref.category] if pref.category else ["CDC", "DEL", "HUEL", "OPEL"]
     if pref.category in ("DEL", "HUEL", "OPEL") and rem[f"{pref.category}_units"] == 0:

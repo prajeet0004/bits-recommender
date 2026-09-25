@@ -106,6 +106,26 @@ programme sitting in messy tables, so copying and citing them is more reliable t
 parsing. Course **lists** still come from the parsed bulletin, so nothing about which
 courses count is hardcoded.
 
+### Extending to all B.E. programmes
+
+The rules engine was built and tested on one programme (Computer Science) first, then
+extended to all 17 single-degree B.E. programmes by adding their requirement numbers
+from each semester-wise pattern (bulletin pp. 211–227). No code changed, only data.
+
+Adding them exposed problems that one programme never would, so the engine now
+**cross-checks two independently extracted sources** for every programme:
+
+- the CDC count typed from the semester pattern vs the length of the parsed CDC list:
+  mismatches for EEE (15 vs 14: the pattern says "47 or 48 units", so one CDC is an
+  either/or) and Environmental & Sustainability (13 vs 16);
+- whether any of the programme's CDC codes appear in this semester's timetable: none do
+  for Biotechnology, Electronics & Computer, and Robotics & Industrial Automation, whose
+  CDCs likely run under other codes via the (not yet parsed) equivalent-courses table.
+
+These are shown to the student as warnings rather than hidden. Dual degrees combine two
+programmes' discipline requirements with sharing rules (IV-1), which needs real logic,
+not just data, so they are out of scope and give a clear "not supported" message.
+
 ## 7. Query layer
 
 A question goes through five steps, and the LLM is used in exactly two:

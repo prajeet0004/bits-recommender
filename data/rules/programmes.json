@@ -1,22 +1,1035 @@
 {
-  "_note": "Programme requirements typed in by hand from the Bulletin, with page references. These numbers sit in messy two-column tables; copying ~10 numbers per programme by hand and citing the page is more reliable than parsing them. Course LISTS are not here - they come from course_lists.json.",
-
-  "B.E. Computer Science": {
-    "course_list_key": "COMPUTER SCIENCE",
-    "discipline_prefixes": ["CS"],
-    "requirements": {
-      "CDC":  {"units": 48, "courses": 14, "source": "bulletin.pdf p.217 (IV-9)"},
-      "DEL":  {"units": 12, "courses": 4,  "source": "bulletin.pdf p.217 (IV-9)"},
-      "HUEL": {"units": 8,  "courses": 3,  "source": "bulletin.pdf p.209 (IV-1)"},
-      "OPEL": {"units": 15, "source": "bulletin.pdf p.209 (IV-1): 129 coursework units - 54 general institutional - 60 discipline"}
-    },
-    "gir_courses": {
-      "_source": "bulletin.pdf p.217 (IV-9) semester-wise pattern, years I-II",
-      "Science Foundation":      ["BIO F101", "CHEM F101", "PHY F101"],
-      "Mathematics Foundation":  ["MATH F101", "MATH F102", "MATH F113", "MATH F211"],
-      "Engineering Foundation":  ["EEE F111", "BITS F111"],
-      "Technical Arts":          ["CS F111", "BITS F103", "BITS F112"],
-      "General Awareness":       ["BITS F101", "BITS K101", "BITS F102", "BITS F225", ["ECON F211", "MGTS F211"]]
-    }
+ "_note": "Programme requirements typed in by hand from the Bulletin, with page references. These numbers sit in messy two-column tables; copying ~10 numbers per programme by hand and citing the page is more reliable than parsing them. Course LISTS are not here - they come from course_lists.json. OPEL units = 129 coursework (IV-1) - 54 GIR - (CDC + DEL units). Dual-degree programmes are not supported.",
+ "B.E. Architecture and Urban Engineering": {
+  "course_list_key": "ARCHITECTURAL AND URBAN ENGINEERING",
+  "discipline_prefixes": [
+   "AUE"
+  ],
+  "requirements": {
+   "CDC": {
+    "units": 48,
+    "courses": 16,
+    "source": "bulletin.pdf p.211"
+   },
+   "DEL": {
+    "units": 12,
+    "courses": 4,
+    "source": "bulletin.pdf p.211"
+   },
+   "HUEL": {
+    "units": 8,
+    "courses": 3,
+    "source": "bulletin.pdf p.209 (IV-1)"
+   },
+   "OPEL": {
+    "units": 15,
+    "source": "derived: 129 - 54 - (48+12), bulletin.pdf p.209 (IV-1)"
+   }
+  },
+  "gir_courses": {
+   "_source": "bulletin.pdf p.217 (IV-9) semester-wise pattern, years I-II",
+   "Science Foundation": [
+    "BIO F101",
+    "CHEM F101",
+    "PHY F101"
+   ],
+   "Mathematics Foundation": [
+    "MATH F101",
+    "MATH F102",
+    "MATH F113",
+    "MATH F211"
+   ],
+   "Engineering Foundation": [
+    "EEE F111",
+    "BITS F111"
+   ],
+   "Technical Arts": [
+    "CS F111",
+    "BITS F103",
+    "BITS F112"
+   ],
+   "General Awareness": [
+    "BITS F101",
+    "BITS K101",
+    "BITS F102",
+    "BITS F225",
+    [
+     "ECON F211",
+     "MGTS F211"
+    ]
+   ]
   }
+ },
+ "B.E. Biotechnology": {
+  "course_list_key": "BIOTECHNOLOGY",
+  "discipline_prefixes": [
+   "BIOT"
+  ],
+  "requirements": {
+   "CDC": {
+    "units": 43,
+    "courses": 13,
+    "source": "bulletin.pdf p.212"
+   },
+   "DEL": {
+    "units": 15,
+    "courses": 5,
+    "source": "bulletin.pdf p.212"
+   },
+   "HUEL": {
+    "units": 8,
+    "courses": 3,
+    "source": "bulletin.pdf p.209 (IV-1)"
+   },
+   "OPEL": {
+    "units": 17,
+    "source": "derived: 129 - 54 - (43+15), bulletin.pdf p.209 (IV-1)"
+   }
+  },
+  "gir_courses": {
+   "_source": "bulletin.pdf p.217 (IV-9) semester-wise pattern, years I-II",
+   "Science Foundation": [
+    "BIO F101",
+    "CHEM F101",
+    "PHY F101"
+   ],
+   "Mathematics Foundation": [
+    "MATH F101",
+    "MATH F102",
+    "MATH F113",
+    "MATH F211"
+   ],
+   "Engineering Foundation": [
+    "EEE F111",
+    "BITS F111"
+   ],
+   "Technical Arts": [
+    "CS F111",
+    "BITS F103",
+    "BITS F112"
+   ],
+   "General Awareness": [
+    "BITS F101",
+    "BITS K101",
+    "BITS F102",
+    "BITS F225",
+    [
+     "ECON F211",
+     "MGTS F211"
+    ]
+   ]
+  }
+ },
+ "B.E. Biotechnology (Applied Molecular Biology)": {
+  "course_list_key": "BIOTECHNOLOGY WITH SPECIALIZATION IN APPLIED MOLECULAR BIOLOGY",
+  "discipline_prefixes": [
+   "BIOT"
+  ],
+  "requirements": {
+   "CDC": {
+    "units": 43,
+    "courses": 13,
+    "source": "bulletin.pdf p.213"
+   },
+   "DEL": {
+    "units": 15,
+    "courses": 5,
+    "source": "bulletin.pdf p.213"
+   },
+   "HUEL": {
+    "units": 8,
+    "courses": 3,
+    "source": "bulletin.pdf p.209 (IV-1)"
+   },
+   "OPEL": {
+    "units": 17,
+    "source": "derived: 129 - 54 - (43+15), bulletin.pdf p.209 (IV-1)"
+   }
+  },
+  "gir_courses": {
+   "_source": "bulletin.pdf p.217 (IV-9) semester-wise pattern, years I-II",
+   "Science Foundation": [
+    "BIO F101",
+    "CHEM F101",
+    "PHY F101"
+   ],
+   "Mathematics Foundation": [
+    "MATH F101",
+    "MATH F102",
+    "MATH F113",
+    "MATH F211"
+   ],
+   "Engineering Foundation": [
+    "EEE F111",
+    "BITS F111"
+   ],
+   "Technical Arts": [
+    "CS F111",
+    "BITS F103",
+    "BITS F112"
+   ],
+   "General Awareness": [
+    "BITS F101",
+    "BITS K101",
+    "BITS F102",
+    "BITS F225",
+    [
+     "ECON F211",
+     "MGTS F211"
+    ]
+   ]
+  }
+ },
+ "B.E. Chemical": {
+  "course_list_key": "CHEMICAL ENGINEERING",
+  "discipline_prefixes": [
+   "CHE"
+  ],
+  "requirements": {
+   "CDC": {
+    "units": 45,
+    "courses": 15,
+    "source": "bulletin.pdf p.214"
+   },
+   "DEL": {
+    "units": 15,
+    "courses": 5,
+    "source": "bulletin.pdf p.214"
+   },
+   "HUEL": {
+    "units": 8,
+    "courses": 3,
+    "source": "bulletin.pdf p.209 (IV-1)"
+   },
+   "OPEL": {
+    "units": 15,
+    "source": "derived: 129 - 54 - (45+15), bulletin.pdf p.209 (IV-1)"
+   }
+  },
+  "gir_courses": {
+   "_source": "bulletin.pdf p.217 (IV-9) semester-wise pattern, years I-II",
+   "Science Foundation": [
+    "BIO F101",
+    "CHEM F101",
+    "PHY F101"
+   ],
+   "Mathematics Foundation": [
+    "MATH F101",
+    "MATH F102",
+    "MATH F113",
+    "MATH F211"
+   ],
+   "Engineering Foundation": [
+    "EEE F111",
+    "BITS F111"
+   ],
+   "Technical Arts": [
+    "CS F111",
+    "BITS F103",
+    "BITS F112"
+   ],
+   "General Awareness": [
+    "BITS F101",
+    "BITS K101",
+    "BITS F102",
+    "BITS F225",
+    [
+     "ECON F211",
+     "MGTS F211"
+    ]
+   ]
+  }
+ },
+ "B.E. Chemical (Energy, Environment and Sustainability)": {
+  "course_list_key": "CHEMICAL ENGINEERING WITH SPECIALIZATION IN ENERGY, ENVIRONMENT, AND SUSTAINABILITY",
+  "discipline_prefixes": [
+   "CHE"
+  ],
+  "requirements": {
+   "CDC": {
+    "units": 45,
+    "courses": 15,
+    "source": "bulletin.pdf p.215"
+   },
+   "DEL": {
+    "units": 15,
+    "courses": 5,
+    "source": "bulletin.pdf p.215"
+   },
+   "HUEL": {
+    "units": 8,
+    "courses": 3,
+    "source": "bulletin.pdf p.209 (IV-1)"
+   },
+   "OPEL": {
+    "units": 15,
+    "source": "derived: 129 - 54 - (45+15), bulletin.pdf p.209 (IV-1)"
+   }
+  },
+  "gir_courses": {
+   "_source": "bulletin.pdf p.217 (IV-9) semester-wise pattern, years I-II",
+   "Science Foundation": [
+    "BIO F101",
+    "CHEM F101",
+    "PHY F101"
+   ],
+   "Mathematics Foundation": [
+    "MATH F101",
+    "MATH F102",
+    "MATH F113",
+    "MATH F211"
+   ],
+   "Engineering Foundation": [
+    "EEE F111",
+    "BITS F111"
+   ],
+   "Technical Arts": [
+    "CS F111",
+    "BITS F103",
+    "BITS F112"
+   ],
+   "General Awareness": [
+    "BITS F101",
+    "BITS K101",
+    "BITS F102",
+    "BITS F225",
+    [
+     "ECON F211",
+     "MGTS F211"
+    ]
+   ]
+  },
+  "needs_verification": [
+   "GIR list: BITS F225 not found in this programme's semester pattern; standard GIR used."
+  ]
+ },
+ "B.E. Civil": {
+  "course_list_key": "CIVIL ENGINEERING",
+  "discipline_prefixes": [
+   "CE"
+  ],
+  "requirements": {
+   "CDC": {
+    "units": 48,
+    "courses": 14,
+    "source": "bulletin.pdf p.216"
+   },
+   "DEL": {
+    "units": 12,
+    "courses": 4,
+    "source": "bulletin.pdf p.216"
+   },
+   "HUEL": {
+    "units": 8,
+    "courses": 3,
+    "source": "bulletin.pdf p.209 (IV-1)"
+   },
+   "OPEL": {
+    "units": 15,
+    "source": "derived: 129 - 54 - (48+12), bulletin.pdf p.209 (IV-1)"
+   }
+  },
+  "gir_courses": {
+   "_source": "bulletin.pdf p.217 (IV-9) semester-wise pattern, years I-II",
+   "Science Foundation": [
+    "BIO F101",
+    "CHEM F101",
+    "PHY F101"
+   ],
+   "Mathematics Foundation": [
+    "MATH F101",
+    "MATH F102",
+    "MATH F113",
+    "MATH F211"
+   ],
+   "Engineering Foundation": [
+    "EEE F111",
+    "BITS F111"
+   ],
+   "Technical Arts": [
+    "CS F111",
+    "BITS F103",
+    "BITS F112"
+   ],
+   "General Awareness": [
+    "BITS F101",
+    "BITS K101",
+    "BITS F102",
+    "BITS F225",
+    [
+     "ECON F211",
+     "MGTS F211"
+    ]
+   ]
+  }
+ },
+ "B.E. Computer Science": {
+  "course_list_key": "COMPUTER SCIENCE",
+  "discipline_prefixes": [
+   "CS"
+  ],
+  "requirements": {
+   "CDC": {
+    "units": 48,
+    "courses": 14,
+    "source": "bulletin.pdf p.217"
+   },
+   "DEL": {
+    "units": 12,
+    "courses": 4,
+    "source": "bulletin.pdf p.217"
+   },
+   "HUEL": {
+    "units": 8,
+    "courses": 3,
+    "source": "bulletin.pdf p.209 (IV-1)"
+   },
+   "OPEL": {
+    "units": 15,
+    "source": "derived: 129 - 54 - (48+12), bulletin.pdf p.209 (IV-1)"
+   }
+  },
+  "gir_courses": {
+   "_source": "bulletin.pdf p.217 (IV-9) semester-wise pattern, years I-II",
+   "Science Foundation": [
+    "BIO F101",
+    "CHEM F101",
+    "PHY F101"
+   ],
+   "Mathematics Foundation": [
+    "MATH F101",
+    "MATH F102",
+    "MATH F113",
+    "MATH F211"
+   ],
+   "Engineering Foundation": [
+    "EEE F111",
+    "BITS F111"
+   ],
+   "Technical Arts": [
+    "CS F111",
+    "BITS F103",
+    "BITS F112"
+   ],
+   "General Awareness": [
+    "BITS F101",
+    "BITS K101",
+    "BITS F102",
+    "BITS F225",
+    [
+     "ECON F211",
+     "MGTS F211"
+    ]
+   ]
+  }
+ },
+ "B.E. Electrical and Electronics": {
+  "course_list_key": "ELECTRICAL AND ELECTRONICS ENGINEERING",
+  "discipline_prefixes": [
+   "EEE"
+  ],
+  "requirements": {
+   "CDC": {
+    "units": 48,
+    "courses": 14,
+    "source": "bulletin.pdf p.218"
+   },
+   "DEL": {
+    "units": 12,
+    "courses": 4,
+    "source": "bulletin.pdf p.218"
+   },
+   "HUEL": {
+    "units": 8,
+    "courses": 3,
+    "source": "bulletin.pdf p.209 (IV-1)"
+   },
+   "OPEL": {
+    "units": 15,
+    "source": "derived: 129 - 54 - (48+12), bulletin.pdf p.209 (IV-1)"
+   }
+  },
+  "gir_courses": {
+   "_source": "bulletin.pdf p.217 (IV-9) semester-wise pattern, years I-II",
+   "Science Foundation": [
+    "BIO F101",
+    "CHEM F101",
+    "PHY F101"
+   ],
+   "Mathematics Foundation": [
+    "MATH F101",
+    "MATH F102",
+    "MATH F113",
+    "MATH F211"
+   ],
+   "Engineering Foundation": [
+    "EEE F111",
+    "BITS F111"
+   ],
+   "Technical Arts": [
+    "CS F111",
+    "BITS F103",
+    "BITS F112"
+   ],
+   "General Awareness": [
+    "BITS F101",
+    "BITS K101",
+    "BITS F102",
+    "BITS F225",
+    [
+     "ECON F211",
+     "MGTS F211"
+    ]
+   ]
+  },
+  "needs_verification": [
+   "bulletin says CDC is '47 or 48 units (14 courses)': one CDC is an either/or, but the parsed list has 15 courses. Remaining CDCs may list one extra course."
+  ]
+ },
+ "B.E. Electronics and Communication": {
+  "course_list_key": "ELECTRONICS AND COMMUNICATION ENGINEERING",
+  "discipline_prefixes": [
+   "ECE"
+  ],
+  "requirements": {
+   "CDC": {
+    "units": 48,
+    "courses": 14,
+    "source": "bulletin.pdf p.219"
+   },
+   "DEL": {
+    "units": 12,
+    "courses": 4,
+    "source": "bulletin.pdf p.219"
+   },
+   "HUEL": {
+    "units": 8,
+    "courses": 3,
+    "source": "bulletin.pdf p.209 (IV-1)"
+   },
+   "OPEL": {
+    "units": 15,
+    "source": "derived: 129 - 54 - (48+12), bulletin.pdf p.209 (IV-1)"
+   }
+  },
+  "gir_courses": {
+   "_source": "bulletin.pdf p.217 (IV-9) semester-wise pattern, years I-II",
+   "Science Foundation": [
+    "BIO F101",
+    "CHEM F101",
+    "PHY F101"
+   ],
+   "Mathematics Foundation": [
+    "MATH F101",
+    "MATH F102",
+    "MATH F113",
+    "MATH F211"
+   ],
+   "Engineering Foundation": [
+    "EEE F111",
+    "BITS F111"
+   ],
+   "Technical Arts": [
+    "CS F111",
+    "BITS F103",
+    "BITS F112"
+   ],
+   "General Awareness": [
+    "BITS F101",
+    "BITS K101",
+    "BITS F102",
+    "BITS F225",
+    [
+     "ECON F211",
+     "MGTS F211"
+    ]
+   ]
+  }
+ },
+ "B.E. Electronics and Computer": {
+  "course_list_key": "ELECTRONICS AND COMPUTER ENGINEERING",
+  "discipline_prefixes": [
+   "ECOM"
+  ],
+  "requirements": {
+   "CDC": {
+    "units": 48,
+    "courses": 14,
+    "source": "bulletin.pdf p.220"
+   },
+   "DEL": {
+    "units": 12,
+    "courses": 4,
+    "source": "bulletin.pdf p.220"
+   },
+   "HUEL": {
+    "units": 8,
+    "courses": 3,
+    "source": "bulletin.pdf p.209 (IV-1)"
+   },
+   "OPEL": {
+    "units": 15,
+    "source": "derived: 129 - 54 - (48+12), bulletin.pdf p.209 (IV-1)"
+   }
+  },
+  "gir_courses": {
+   "_source": "bulletin.pdf p.217 (IV-9) semester-wise pattern, years I-II",
+   "Science Foundation": [
+    "BIO F101",
+    "CHEM F101",
+    "PHY F101"
+   ],
+   "Mathematics Foundation": [
+    "MATH F101",
+    "MATH F102",
+    "MATH F113",
+    "MATH F211"
+   ],
+   "Engineering Foundation": [
+    "EEE F111",
+    "BITS F111"
+   ],
+   "Technical Arts": [
+    "CS F111",
+    "BITS F103",
+    "BITS F112"
+   ],
+   "General Awareness": [
+    "BITS F101",
+    "BITS K101",
+    "BITS F102",
+    "BITS F225",
+    [
+     "ECON F211",
+     "MGTS F211"
+    ]
+   ]
+  }
+ },
+ "B.E. Electronics and Instrumentation": {
+  "course_list_key": "ELECTRONICS AND INSTRUMENTATION ENGINEERING",
+  "discipline_prefixes": [
+   "INSTR"
+  ],
+  "requirements": {
+   "CDC": {
+    "units": 48,
+    "courses": 14,
+    "source": "bulletin.pdf p.221"
+   },
+   "DEL": {
+    "units": 12,
+    "courses": 4,
+    "source": "bulletin.pdf p.221"
+   },
+   "HUEL": {
+    "units": 8,
+    "courses": 3,
+    "source": "bulletin.pdf p.209 (IV-1)"
+   },
+   "OPEL": {
+    "units": 15,
+    "source": "derived: 129 - 54 - (48+12), bulletin.pdf p.209 (IV-1)"
+   }
+  },
+  "gir_courses": {
+   "_source": "bulletin.pdf p.217 (IV-9) semester-wise pattern, years I-II",
+   "Science Foundation": [
+    "BIO F101",
+    "CHEM F101",
+    "PHY F101"
+   ],
+   "Mathematics Foundation": [
+    "MATH F101",
+    "MATH F102",
+    "MATH F113",
+    "MATH F211"
+   ],
+   "Engineering Foundation": [
+    "EEE F111",
+    "BITS F111"
+   ],
+   "Technical Arts": [
+    "CS F111",
+    "BITS F103",
+    "BITS F112"
+   ],
+   "General Awareness": [
+    "BITS F101",
+    "BITS K101",
+    "BITS F102",
+    "BITS F225",
+    [
+     "ECON F211",
+     "MGTS F211"
+    ]
+   ]
+  }
+ },
+ "B.E. Environmental and Sustainability": {
+  "course_list_key": "ENVIRONMENTAL AND SUSTAINABILITY ENGINEERING",
+  "discipline_prefixes": [
+   "ENVS"
+  ],
+  "requirements": {
+   "CDC": {
+    "units": 48,
+    "courses": 16,
+    "source": "bulletin.pdf p.222"
+   },
+   "DEL": {
+    "units": 12,
+    "courses": 4,
+    "source": "bulletin.pdf p.222"
+   },
+   "HUEL": {
+    "units": 8,
+    "courses": 3,
+    "source": "bulletin.pdf p.209 (IV-1)"
+   },
+   "OPEL": {
+    "units": 15,
+    "source": "derived: 129 - 54 - (48+12), bulletin.pdf p.209 (IV-1)"
+   }
+  },
+  "gir_courses": {
+   "_source": "bulletin.pdf p.217 (IV-9) semester-wise pattern, years I-II",
+   "Science Foundation": [
+    "BIO F101",
+    "CHEM F101",
+    "PHY F101"
+   ],
+   "Mathematics Foundation": [
+    "MATH F101",
+    "MATH F102",
+    "MATH F113",
+    "MATH F211"
+   ],
+   "Engineering Foundation": [
+    "EEE F111",
+    "BITS F111"
+   ],
+   "Technical Arts": [
+    "CS F111",
+    "BITS F103",
+    "BITS F112"
+   ],
+   "General Awareness": [
+    "BITS F101",
+    "BITS K101",
+    "BITS F102",
+    "BITS F225",
+    [
+     "ECON F211",
+     "MGTS F211"
+    ]
+   ]
+  },
+  "needs_verification": [
+   "semester pattern also shows BITS F113, BITS F114, PHY F102 in years I-II; standard GIR used."
+  ]
+ },
+ "B.E. Mechanical": {
+  "course_list_key": "MECHANICAL ENGINEERING",
+  "discipline_prefixes": [
+   "ME"
+  ],
+  "requirements": {
+   "CDC": {
+    "units": 48,
+    "courses": 16,
+    "source": "bulletin.pdf p.223"
+   },
+   "DEL": {
+    "units": 12,
+    "courses": 4,
+    "source": "bulletin.pdf p.223"
+   },
+   "HUEL": {
+    "units": 8,
+    "courses": 3,
+    "source": "bulletin.pdf p.209 (IV-1)"
+   },
+   "OPEL": {
+    "units": 15,
+    "source": "derived: 129 - 54 - (48+12), bulletin.pdf p.209 (IV-1)"
+   }
+  },
+  "gir_courses": {
+   "_source": "bulletin.pdf p.217 (IV-9) semester-wise pattern, years I-II",
+   "Science Foundation": [
+    "BIO F101",
+    "CHEM F101",
+    "PHY F101"
+   ],
+   "Mathematics Foundation": [
+    "MATH F101",
+    "MATH F102",
+    "MATH F113",
+    "MATH F211"
+   ],
+   "Engineering Foundation": [
+    "EEE F111",
+    "BITS F111"
+   ],
+   "Technical Arts": [
+    "CS F111",
+    "BITS F103",
+    "BITS F112"
+   ],
+   "General Awareness": [
+    "BITS F101",
+    "BITS K101",
+    "BITS F102",
+    "BITS F225",
+    [
+     "ECON F211",
+     "MGTS F211"
+    ]
+   ]
+  }
+ },
+ "B.E. Mechanical (Aerospace)": {
+  "course_list_key": "MECHANICAL ENGINEERING WITH SPECIALIZATION IN AEROSPACE",
+  "discipline_prefixes": [
+   "ME"
+  ],
+  "requirements": {
+   "CDC": {
+    "units": 48,
+    "courses": 16,
+    "source": "bulletin.pdf p.224"
+   },
+   "DEL": {
+    "units": 12,
+    "courses": 4,
+    "source": "bulletin.pdf p.224"
+   },
+   "HUEL": {
+    "units": 8,
+    "courses": 3,
+    "source": "bulletin.pdf p.209 (IV-1)"
+   },
+   "OPEL": {
+    "units": 15,
+    "source": "derived: 129 - 54 - (48+12), bulletin.pdf p.209 (IV-1)"
+   }
+  },
+  "gir_courses": {
+   "_source": "bulletin.pdf p.217 (IV-9) semester-wise pattern, years I-II",
+   "Science Foundation": [
+    "BIO F101",
+    "CHEM F101",
+    "PHY F101"
+   ],
+   "Mathematics Foundation": [
+    "MATH F101",
+    "MATH F102",
+    "MATH F113",
+    "MATH F211"
+   ],
+   "Engineering Foundation": [
+    "EEE F111",
+    "BITS F111"
+   ],
+   "Technical Arts": [
+    "CS F111",
+    "BITS F103",
+    "BITS F112"
+   ],
+   "General Awareness": [
+    "BITS F101",
+    "BITS K101",
+    "BITS F102",
+    "BITS F225",
+    [
+     "ECON F211",
+     "MGTS F211"
+    ]
+   ]
+  }
+ },
+ "B.E. Manufacturing": {
+  "course_list_key": "MANUFACTURING ENGINEERING",
+  "discipline_prefixes": [
+   "MF"
+  ],
+  "requirements": {
+   "CDC": {
+    "units": 48,
+    "courses": 15,
+    "source": "bulletin.pdf p.225"
+   },
+   "DEL": {
+    "units": 12,
+    "courses": 4,
+    "source": "bulletin.pdf p.225"
+   },
+   "HUEL": {
+    "units": 8,
+    "courses": 3,
+    "source": "bulletin.pdf p.209 (IV-1)"
+   },
+   "OPEL": {
+    "units": 15,
+    "source": "derived: 129 - 54 - (48+12), bulletin.pdf p.209 (IV-1)"
+   }
+  },
+  "gir_courses": {
+   "_source": "bulletin.pdf p.217 (IV-9) semester-wise pattern, years I-II",
+   "Science Foundation": [
+    "BIO F101",
+    "CHEM F101",
+    "PHY F101"
+   ],
+   "Mathematics Foundation": [
+    "MATH F101",
+    "MATH F102",
+    "MATH F113",
+    "MATH F211"
+   ],
+   "Engineering Foundation": [
+    "EEE F111",
+    "BITS F111"
+   ],
+   "Technical Arts": [
+    "CS F111",
+    "BITS F103",
+    "BITS F112"
+   ],
+   "General Awareness": [
+    "BITS F101",
+    "BITS K101",
+    "BITS F102",
+    "BITS F225",
+    [
+     "ECON F211",
+     "MGTS F211"
+    ]
+   ]
+  }
+ },
+ "B.E. Mathematics and Computing": {
+  "course_list_key": "MATHEMATICS AND COMPUTING",
+  "discipline_prefixes": [
+   "MAC"
+  ],
+  "requirements": {
+   "CDC": {
+    "units": 48,
+    "courses": 15,
+    "source": "bulletin.pdf p.226"
+   },
+   "DEL": {
+    "units": 12,
+    "courses": 4,
+    "source": "bulletin.pdf p.226"
+   },
+   "HUEL": {
+    "units": 8,
+    "courses": 3,
+    "source": "bulletin.pdf p.209 (IV-1)"
+   },
+   "OPEL": {
+    "units": 15,
+    "source": "derived: 129 - 54 - (48+12), bulletin.pdf p.209 (IV-1)"
+   }
+  },
+  "gir_courses": {
+   "_source": "bulletin.pdf p.217 (IV-9) semester-wise pattern, years I-II",
+   "Science Foundation": [
+    "BIO F101",
+    "CHEM F101",
+    "PHY F101"
+   ],
+   "Mathematics Foundation": [
+    "MATH F101",
+    "MATH F102",
+    "MATH F113",
+    "MATH F211"
+   ],
+   "Engineering Foundation": [
+    "EEE F111",
+    "BITS F111"
+   ],
+   "Technical Arts": [
+    "CS F111",
+    "BITS F103",
+    "BITS F112"
+   ],
+   "General Awareness": [
+    "BITS F101",
+    "BITS K101",
+    "BITS F102",
+    "BITS F225",
+    [
+     "ECON F211",
+     "MGTS F211"
+    ]
+   ]
+  }
+ },
+ "B.E. Robotics and Industrial Automation": {
+  "course_list_key": "ROBOTICS AND INDUSTRIAL AUTOMATION",
+  "discipline_prefixes": [
+   "RIA"
+  ],
+  "requirements": {
+   "CDC": {
+    "units": 48,
+    "courses": 15,
+    "source": "bulletin.pdf p.227"
+   },
+   "DEL": {
+    "units": 12,
+    "courses": 4,
+    "source": "bulletin.pdf p.227"
+   },
+   "HUEL": {
+    "units": 8,
+    "courses": 3,
+    "source": "bulletin.pdf p.209 (IV-1)"
+   },
+   "OPEL": {
+    "units": 15,
+    "source": "derived: 129 - 54 - (48+12), bulletin.pdf p.209 (IV-1)"
+   }
+  },
+  "gir_courses": {
+   "_source": "bulletin.pdf p.217 (IV-9) semester-wise pattern, years I-II",
+   "Science Foundation": [
+    "BIO F101",
+    "CHEM F101",
+    "PHY F101"
+   ],
+   "Mathematics Foundation": [
+    "MATH F101",
+    "MATH F102",
+    "MATH F113",
+    "MATH F211"
+   ],
+   "Engineering Foundation": [
+    "EEE F111",
+    "BITS F111"
+   ],
+   "Technical Arts": [
+    "CS F111",
+    "BITS F103",
+    "BITS F112"
+   ],
+   "General Awareness": [
+    "BITS F101",
+    "BITS K101",
+    "BITS F102",
+    "BITS F225",
+    [
+     "ECON F211",
+     "MGTS F211"
+    ]
+   ]
+  },
+  "needs_verification": [
+   "semester pattern uses different first-year codes (e.g. MATH F111, ME F112); standard GIR used, may be wrong for this programme."
+  ]
+ }
 }

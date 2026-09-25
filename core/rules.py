@@ -18,6 +18,10 @@ def load_json(rel):
     return json.loads((DATA / rel).read_text())
 
 
+class UnsupportedProgramme(ValueError):
+    pass
+
+
 class Catalog:
     """Everything loaded once from data/: programme rules, course lists, timetable."""
 
@@ -27,6 +31,34 @@ class Catalog:
         self.course_lists = lists["programmes"]
         self.huel_pool = {c["code"]: c for c in lists["huel_pool"]}
         self.timetable = load_json("processed/timetable.json")
+
+    def supported_programmes(self):
+        return sorted(k for k in self.programmes if not k.startswith("_"))
+
+    def programme(self, name):
+        """Rules + course lists for a programme, or a clear error (not a KeyError)."""
+        if name not in self.programmes or name.startswith("_"):
+            raise UnsupportedProgramme(
+                f"'{name}' is not supported yet (dual degrees are not supported). "
+                f"Supported: {', '.join(self.supported_programmes())}")
+        rules = self.programmes[name]
+        return rules, self.course_lists[rules["course_list_key"]]
+
+    def programme_warnings(self, name):
+        """Cross-check two sources that were extracted independently:
+        the CDC count typed from the semester pattern vs the parsed CDC list."""
+        rules, plist = self.programme(name)
+        warn = list(rules.get("needs_verification", []))
+        want, got = rules["requirements"]["CDC"]["courses"], len(plist["core"])
+        if want != got:
+            warn.append(f"bulletin says {want} CDCs but the parsed CDC list has {got}; "
+                        f"remaining-CDC list may be wrong")
+        offered = {c["course_code"] for c in self.timetable}
+        if not any(c["code"] in offered for c in plist["core"]):
+            warn.append("none of this programme's CDC codes appear in this semester's timetable "
+                        "(may be offered under other codes, e.g. via the equivalent-courses table, "
+                        "which is not parsed yet)")
+        return warn
 
     def offered(self, admission_year):
         """course_code -> timetable record, for courses running this semester.
@@ -85,8 +117,7 @@ def classify(code, prog_rules, prog_list, catalog, gir):
 
 
 def academic_state(student, catalog):
-    prog_rules = catalog.programmes[student["programme"]]
-    prog_list = catalog.course_lists[prog_rules["course_list_key"]]
+    prog_rules, prog_list = catalog.programme(student["programme"])
     req = prog_rules["requirements"]
     gir = gir_codes(prog_rules)
 
@@ -116,7 +147,8 @@ def academic_state(student, catalog):
                               and not ({"ECON F211", "MGTS F211"} & set(taken) and c in ("ECON F211", "MGTS F211"))),
     }
     return {"counted_as": counted, "units_done": done_units, "remaining": remaining,
-            "units_unknown_for": unknown_units, "sources": {k: v["source"] for k, v in req.items()}}
+            "units_unknown_for": unknown_units, "sources": {k: v["source"] for k, v in req.items()},
+            "warnings": catalog.programme_warnings(student["programme"])}
 
 
 PROJECT_NUMBERS = {"F266", "F366", "F367", "F376", "F377", "F491"}
@@ -138,8 +170,7 @@ def eligible_courses(student, catalog, state=None):
     category they would count towards. Prerequisites are NOT verified here
     (the supplied data only has them for a few courses) and are marked so."""
     state = state or academic_state(student, catalog)
-    prog_rules = catalog.programmes[student["programme"]]
-    prog_list = catalog.course_lists[prog_rules["course_list_key"]]
+    prog_rules, prog_list = catalog.programme(student["programme"])
     gir = gir_codes(prog_rules)
     taken = set(student["completed"] + student["current"])
     rem = state["remaining"]
@@ -175,6 +206,8 @@ if __name__ == "__main__":
     st = academic_state(student, cat)
     print("Units done:", st["units_done"])
     print("Remaining:", json.dumps(st["remaining"], indent=1))
+    for w in st["warnings"]:
+        print("Warning:", w)
     if st["units_unknown_for"]:
         print("Units unknown (check by hand):", st["units_unknown_for"])
     el = eligible_courses(student, cat, st)
