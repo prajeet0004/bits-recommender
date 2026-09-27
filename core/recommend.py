@@ -20,7 +20,7 @@ from typing import List
 
 from pydantic import BaseModel, Field
 
-from core import llm, rules
+from core import llm, rules, timetable
 from core.query import Preferences, parse_query
 
 HANDOUTS = rules.DATA / "processed" / "handouts.jsonl"
@@ -155,12 +155,6 @@ def keyword_scores(interests, candidates, handouts):
 
 # ---------- the pipeline ----------
 
-def lecture_slots(tt):
-    lec = [s for s in tt["sections"] if s["type"] == "lecture" and s["slots"]]
-    return [f"{s['section']}: {' '.join(s['slots']['days'])} hour {','.join(map(str, s['slots']['hours']))}"
-            for s in lec]
-
-
 def recommend(student, pref: Preferences, catalog=None, handouts=None):
     catalog = catalog or rules.Catalog()
     handouts = handouts if handouts is not None else load_handouts()
@@ -175,18 +169,32 @@ def recommend(student, pref: Preferences, catalog=None, handouts=None):
         notes.append(f"Your {pref.category} requirement is already complete.")
     candidates = [c for cat in cats for c in eligible.get(cat, [])]
 
-    kept, removed = [], 0
+    busy, exams, unknown = timetable.busy_schedule(student, offered)
+    free_days = timetable.parse_free_days(pref.free_days)
+    kept, removed, clashes = [], 0, []
     for c in candidates:
         checks = check_constraints(pref, handouts.get(c["code"]))
         if any(v[0] == NO for k, v in checks.items() if k not in SOFT):
             removed += 1
             continue
-        kept.append((c, checks))
+        tt = offered.get(c["code"])
+        fit = None
+        if tt:
+            fit, why = timetable.plan(tt, busy, exams, pref.no_8am, free_days, pref.compact_timetable)
+            if fit is None:
+                clashes.append(f"{c['code']}: {why}")
+                continue
+            evidence = "suggested sections " + ", ".join(fit["sections"].values())
+            if unknown:
+                what = ", ".join(unknown) if len(unknown) <= 2 else f"{len(unknown)} of your current course sections"
+                evidence += f"; not checked against {what} (pick your sections in the profile)"
+            checks["fits your timetable"] = (PARTLY if unknown else YES, evidence)
+        kept.append((c, checks, fit))
 
-    scores = score_interests(pref.interests, [c for c, _ in kept], handouts)
+    scores = score_interests(pref.interests, [c for c, _, _ in kept], handouts)
 
     results = []
-    for c, checks in kept:
+    for c, checks, fit in kept:
         rel, why = scores.get(c["code"], (0, ""))
         if pref.interests and rel < 4:
             continue                                   # not about what they asked for
@@ -194,6 +202,8 @@ def recommend(student, pref: Preferences, catalog=None, handouts=None):
         # yes = 0, partly = -1, not verified = -3 ; project preference ranks by its share
         penalty = {YES: 0, PARTLY: 1, UNKNOWN: 3, NO: 0}
         rank = rel - sum(penalty[v[0]] for k, v in checks.items() if k not in SOFT)
+        if pref.compact_timetable and fit:
+            rank -= fit["added_gaps"]
         if "project-based" in checks:
             share = re.match(r"(\d+)%", checks["project-based"][1])
             rank += int(share[1]) / 10 if share else -3
@@ -207,12 +217,15 @@ def recommend(student, pref: Preferences, catalog=None, handouts=None):
             "matches": why,
             "checks": {k: {"status": v[0], "evidence": v[1]} for k, v in checks.items()},
             "evaluation": [f"{e['component']} {e['weight_percent']}%" for e in h["extracted"]["evaluation"]] if h else [],
-            "lectures": lecture_slots(offered[c["code"]]) if c["code"] in offered else [],
+            "lectures": fit["schedule"] if fit else [],
             "warnings": c["notes"] + (h["needs_verification"] if h else ["no handout found"]),
             "sources": [f"timetable.pdf p.{c['source']['page']}"] + ([h["source"]["doc"]] if h else []),
             "_rank": rank,
         })
     results.sort(key=lambda r: -r["_rank"])
+    if clashes:
+        notes.append(f"{len(clashes)} course(s) removed because of timetable or exam clashes, e.g. "
+                     + "; ".join(clashes[:3]))
     if removed:
         notes.append(f"{removed} eligible course(s) removed because their handout conflicts with your request.")
     return {"preferences": pref.model_dump(), "remaining": rem, "notes": notes,

@@ -60,15 +60,43 @@ def lines_of(words, header_bottom, tol=2.5):
     return [sorted(l, key=lambda w: w["x0"]) for l in lines]
 
 
+def split_hours(t):
+    """Hours are 1-11, but the PDF sometimes glues them: 'S 89' = hours 8 and 9,
+    'S 12' = 1 and 2, '910' = 9 and 10. Read two digits only for 10 and 11."""
+    out, i = [], 0
+    while i < len(t):
+        if t[i] == "1" and i + 1 < len(t) and t[i + 1] in "01":
+            out.append(int(t[i:i + 2])); i += 2
+        else:
+            out.append(int(t[i])); i += 1
+    return out
+
+
 def parse_days_hours(tokens):
-    """['M','W','F','10'] -> {'days':['M','W','F'], 'hours':[10]}"""
-    days = [t for t in tokens if t in DAY_TOKENS]
-    hours = [int(t) for t in tokens if t.isdigit()]
-    # 'MW' glued together sometimes
+    """Pair each day with its hours. Hours apply to the days just before them:
+    'M W 3 Th 9'   -> M@3, W@3, Th@9
+    'T Th F 4'     -> T@4, Th@4, F@4
+    'M W F 10 11'  -> M@10, M@11, W@10, ... (a 2-hour block)
+    Returns {'days', 'hours', 'meetings': [[day, hour], ...]} or None."""
+    meetings, days, hours = [], [], []
+
+    def flush():
+        meetings.extend([d, h] for d in days for h in hours)
+
     for t in tokens:
-        if t not in DAY_TOKENS and not t.isdigit():
-            days += re.findall(r"Th|Su|M|T|W|F|S", t)
-    return {"days": days, "hours": hours} if days else None
+        if t.isdigit():
+            hours.extend(split_hours(t))
+            continue
+        found = [t] if t in DAY_TOKENS else re.findall(r"Th|Su|M|T|W|F|S", t)   # 'MW' glued
+        if found and hours:            # a day after hours starts a new group
+            flush()
+            days, hours = [], []
+        days += found
+    flush()
+    if not meetings:
+        return None
+    return {"days": sorted({d for d, _ in meetings}, key="M T W Th F S Su".split().index),
+            "hours": sorted({h for _, h in meetings}), "meetings": meetings}
 
 
 def parse(path):

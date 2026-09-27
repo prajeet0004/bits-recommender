@@ -18,7 +18,7 @@ understanding the student's query, and writing the explanation.
 | Rules engine (remaining requirements, eligibility) | ✅ done for all 17 single-degree B.E. programmes |
 | Query layer (LLM → filters → ranked results) | ✅ done |
 | Dashboard (Streamlit) | ✅ done |
-| Timetable clash checking (brownie point) | ⏳ planned |
+| Timetable intelligence (brownie point) | ✅ done: clashes, section choice, exam clashes, no 8 AM, free day, compact |
 
 ## Setup
 
@@ -57,6 +57,19 @@ It opens in your browser. In the sidebar, load the example profile or build your
 (programme, completed and current courses, interests), and save it. The main area shows
 your remaining CDC / DEL / HUEL / OPEL requirements, recomputed live from the data, and a
 question box. Try one of the four example questions, or type your own.
+
+### Timetable intelligence
+
+Recommendations are checked against the courses you're taking now. In the sidebar,
+"Your sections" lets you pick which lecture / tutorial / lab section you're in for courses
+with several sections; courses with only one section are known automatically.
+
+- A course is only suggested if some section of each type (lecture, tutorial, practical)
+  is free. If L1 clashes but L2 doesn't, L2 is suggested instead of dropping the course.
+- Courses whose midsem or compre is at the same date and session as one of yours are removed.
+- Questions can ask for "no 8 AM classes" (hour 1), "keep Friday free", or a compact timetable
+  (fewest idle hours between classes).
+- If you haven't picked your sections, the check says so ("partly") instead of claiming a fit.
 
 ## Running the pipeline
 
@@ -97,6 +110,7 @@ core/
   query.py                  LLM: question -> structured preferences (sees no course data)
   recommend.py              eligible set -> handout checks -> LLM interest scores -> results
   llm.py                    Gemini wrapper with model fallback
+  timetable.py              clash checking, section choice, time preferences (no LLM)
 app.py                      Streamlit dashboard (only draws the screen; all logic is in core/)
 .streamlit/config.toml      dashboard theme
 data/

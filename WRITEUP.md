@@ -191,6 +191,27 @@ A bug caught while testing: widgets without explicit keys kept their old values 
 different profile was loaded, and one test run saved a question into the interests field.
 Every profile widget is now keyed to the loaded profile.
 
+### Timetable intelligence
+
+Plain code in `core/timetable.py`. The student's busy slots come from their current courses:
+single-section types are known, and for multi-section courses the student picks their section
+in the profile. For each candidate course, one section per type is picked that doesn't clash,
+respects "no 8 AM" and free days, and (if asked) adds the fewest idle hours. Same-date,
+same-session midsem or compre removes the course, e.g. BITS F464 Machine Learning was removed
+for the example student because its midsem (10/10 AN1) clashes with CS F213's.
+
+**A parser bug found by this feature.** The timetable writes slots like `M W 3 Th 9`, meaning
+M and W at hour 3 and Th at hour 9. The first parser stored this as days {M, W, Th} and hours
+{3, 9}, which loses the pairing (197 sections affected) and would have produced false clashes.
+It now stores `meetings` as (day, hour) pairs. It also splits glued hours: `S 89` is hours 8
+and 9, and `S 12` is hours 1 and 2 (hours run 1 to 11, so only 10 and 11 are read as two digits).
+The display bug this caused on result cards ("M W Th hour 3,9") went unnoticed until clash
+checking needed the exact slots.
+
+Limits: each suggestion is checked against the current courses, not against the other
+suggestions in the same answer; and if the student hasn't picked their sections, the check is
+reported as "partly" rather than assumed to fit.
+
 ## 9. What the data can and can't answer
 
 | Property | Known | Not stated |

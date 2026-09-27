@@ -22,6 +22,10 @@ class Preferences(BaseModel):
     lenient_makeup: Optional[bool] = Field(description="true if the student wants a lenient make-up policy")
     prefers_project: Optional[bool] = Field(description="true if the student prefers project-based evaluation")
     avoid_quizzes: Optional[bool] = Field(description="true if the student wants no quizzes")
+    no_8am: Optional[bool] = Field(description="true if the student wants no 8 AM classes")
+    free_days: List[str] = Field(description="Weekdays the student wants kept free, e.g. ['Friday']. Empty if none.")
+    compact_timetable: Optional[bool] = Field(
+        description="true if the student wants a compact timetable / no long gaps between classes")
     count: int = Field(description="How many courses to suggest. Default 5 if not stated.")
 
 

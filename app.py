@@ -25,7 +25,7 @@ try:
 except Exception:
     pass
 
-from core import rules                                          # noqa: E402
+from core import rules, timetable                               # noqa: E402
 from core.query import parse_query                              # noqa: E402
 from core.recommend import load_handouts, recommend             # noqa: E402
 
@@ -35,6 +35,8 @@ EXAMPLES = [
     "I want an OPEL with no attendance requirement",
     "Suggest courses with no midsem and a lenient makeup policy",
     "I need a HUEL and prefer project-based evaluation",
+    "A DEL with no 8 AM classes that keeps my timetable compact",
+    "An OPEL that keeps Saturday free",
 ]
 
 # ---------- look ----------
@@ -166,6 +168,24 @@ with st.sidebar:
     current = st.multiselect("Courses you're taking now", known, key=f"now_{choice}",
                              default=[c for c in base.get("current", []) if c in opts],
                              format_func=lambda c: opts[c])
+    # which section of each current course: needed for the clash check
+    sections = {}
+    offered_now = cat.offered(int(year))
+    multi = [(c, t, secs) for c in current if c in offered_now
+             for t, secs in timetable.options(offered_now[c]).items() if len(secs) > 1]
+    if multi:
+        with st.expander(f"Your sections ({len(multi)} to pick)", expanded=False):
+            st.caption("Used to check timetable clashes. Leave 'Not sure' if you don't know.")
+            saved = base.get("sections") or {}
+            for c, t, secs in multi:
+                names = ["Not sure"] + [s["section"] for s in secs]
+                label = {s["section"]: timetable.describe(s) for s in secs}
+                prev = saved.get(c, {}).get(t, "Not sure")
+                pick = st.selectbox(f"{c} {t}", names, key=f"sec_{choice}_{c}_{t}",
+                                    index=names.index(prev) if prev in names else 0,
+                                    format_func=lambda n, label=label: label.get(n, n))
+                if pick != "Not sure":
+                    sections.setdefault(c, {})[t] = pick
     minor = st.text_input("Minor (optional)", key=f"minor_{choice}", value=base.get("minor") or "",
                           help="Stored with your profile. Minor requirements are not checked yet.")
     interests = st.text_input("Interests, comma separated", key=f"int_{choice}",
@@ -173,6 +193,7 @@ with st.sidebar:
 
     student = {"campus": campus, "admission_year": int(year), "programme": prog,
                "current_semester": int(sem), "completed": completed, "current": current,
+               "sections": sections,
                "minor": minor or None,
                "interests": [i.strip() for i in interests.split(",") if i.strip()]}
 
@@ -234,7 +255,7 @@ for w in state["warnings"]:
 # ---------- ask ----------
 
 st.markdown("#### Ask for courses")
-cols = st.columns(2) * 2
+cols = st.columns(2) * 3
 for col, ex in zip(cols, EXAMPLES):
     if col.button(ex, use_container_width=True):
         st.session_state.question = ex
@@ -243,6 +264,23 @@ with st.form("ask", border=False):
     q = st.text_input("Your question", key="question", label_visibility="collapsed",
                       placeholder="e.g. Suggest an AI-related DEL with no midsem")
     go = st.form_submit_button("Find courses", type="primary")
+
+
+FRIENDLY = [
+    (r"has_midsem=\w+ but evaluation table says \w+", "the handout is unclear about whether there is a midsem"),
+    (r"evaluation weights sum to (\d+), not 100", r"evaluation weights add up to \1%, not 100%"),
+    (r"some evaluation weights missing", "some evaluation weights are missing from the handout"),
+    (r"filename code .* not among codes on handout.*", "the handout file may belong to a different course"),
+    (r"no evaluation scheme found", "no evaluation scheme found in the handout"),
+]
+
+
+def friendly(w):
+    """Validator messages are written for developers; show students plain language."""
+    for pat, rep in FRIENDLY:
+        if re.search(pat, w):
+            return re.sub(pat, rep, w)
+    return w
 
 
 def check_html(k, v):
@@ -258,10 +296,10 @@ def card(r):
     if r["evaluation"]:
         meta.append("<b>Evaluation</b> " + html.escape(", ".join(r["evaluation"])))
     if r["lectures"]:
-        meta.append("<b>Lectures</b> " + html.escape("; ".join(r["lectures"])))
+        meta.append("<b>Suggested sections</b> " + html.escape(" | ".join(r["lectures"])))
     meta.append("<b>Eligibility</b> " + html.escape(r["eligibility"]))
     meta.append("<b>Source</b> " + html.escape(", ".join(r["sources"])))
-    warn = (f'<div class="cwarn">Check: {html.escape("; ".join(r["warnings"]))}</div>'
+    warn = (f'<div class="cwarn">Check: {html.escape("; ".join(friendly(w) for w in r["warnings"]))}</div>'
             if r["warnings"] else "")
     return (f'<div class="course"><div class="chead"><div><span class="ccode">{html.escape(r["code"])}</span>'
             f'<span class="ctitle">{html.escape(r["title"].title())}</span></div>'
