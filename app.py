@@ -236,7 +236,7 @@ def row(label, sub, done, total, unit, planned=0):
 
 
 plan = state.get("planned") or {}
-cdc_total = req["CDC"]["courses"]
+cdc_total = max(req["CDC"]["courses"], len(cat.programme(prog)[1]["core"]))   # EEE: 14 vs 15 parsed
 cdc_done = cdc_total - len(rem["CDC_courses"])
 ledger = [row("CDC", "discipline core", cdc_done, cdc_total, "courses", len(plan.get("CDC_courses", [])))]
 for k, sub in (("DEL", "discipline electives"), ("HUEL", "humanities electives"), ("OPEL", "open electives")):
@@ -288,11 +288,11 @@ if state.get("fixed_pattern"):
 # ---------- ask ----------
 
 st.markdown("#### Ask for courses")
-cols = st.columns(2) * 3
-for col, ex in zip(cols, EXAMPLES):
-    if col.button(ex, use_container_width=True):
-        st.session_state.question = ex
-        st.session_state.run = True          # an example runs straight away
+for i in range(0, len(EXAMPLES), 2):           # rows of two, read left to right
+    for col, ex in zip(st.columns(2), EXAMPLES[i:i + 2]):
+        if col.button(ex, use_container_width=True):
+            st.session_state.question = ex
+            st.session_state.run = True      # an example runs straight away
 with st.form("ask", border=False):
     q = st.text_input("Your question", key="question", label_visibility="collapsed",
                       placeholder="e.g. Suggest an AI-related DEL with no midsem")
@@ -314,6 +314,16 @@ def friendly(w):
         if re.search(pat, w):
             return re.sub(pat, rep, w)
     return w
+
+
+def pref_label(k, v):
+    """One 'Understood as' item. Kept out of an f-string: nesting the same quote
+    type inside an f-string is a SyntaxError before Python 3.12."""
+    name = html.escape(k.replace("_", " "))
+    if v is True:
+        return f"<b>{name}</b>"
+    value = ", ".join(v) if isinstance(v, list) else str(v)
+    return f"<b>{name}</b> {html.escape(value)}"
 
 
 def check_html(k, v):
@@ -354,8 +364,7 @@ if go and q.strip():
             st.stop()
     p = {k: v for k, v in out["preferences"].items() if v and k != "count"}
     st.markdown('<div class="understood">Understood as: ' +
-                ", ".join(f"<b>{html.escape(k.replace('_', ' '))}</b> {html.escape(", ".join(v) if isinstance(v, list) else str(v)) if v is not True else ''}"
-                           for k, v in p.items()) + "</div>", unsafe_allow_html=True)
+                ", ".join(pref_label(k, v) for k, v in p.items()) + "</div>", unsafe_allow_html=True)
     for n in out["notes"]:
         if not n.startswith("Programme data:"):
             st.caption(n)

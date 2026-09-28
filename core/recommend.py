@@ -27,7 +27,16 @@ HANDOUTS = rules.DATA / "processed" / "handouts.jsonl"
 MAX_TO_SCORE = 150          # cap on courses sent to the LLM for interest scoring
 YES, PARTLY, NO, UNKNOWN = "yes", "partly", "no", "not verified"
 SOFT = {"project-based"}          # preferences: rank by them, never remove a course for them
-EXPECTS_ATTENDANCE = re.compile(r"expected|must|mandatory|compulsory|required|as per|guidelines|regular", re.I)
+# Any of these means attendance is still expected or enforced, even without marks:
+# thresholds ("60% attendance", "below 80%"), "have to", "governed by", debarring, shortage.
+EXPECTS_ATTENDANCE = re.compile(
+    r"expected|must|mandatory|compulsory|required|as per|guidelines|regular|"
+    r"\d+\s*%|minimum|below|have to|has to|governed|debar|shortage|essential|"
+    r"not be allowed|not allowed|eligib|necessary|obligatory|consideration|taken into|"
+    r"adhere|present in|sign attendance|registered section", re.I)
+NO_ATTENDANCE_RULE = re.compile(r"not (compulsory|mandatory|required|necessary)|optional|voluntary|"
+                                r"no attendance (requirement|policy)", re.I)
+MID_ROW = re.compile(r"mid", re.I)
 PROJECT_LIKE = re.compile(r"project|assignment|term paper|presentation|seminar|report|portfolio", re.I)
 
 
@@ -63,9 +72,16 @@ def check_constraints(pref: Preferences, h):
 
     if pref.no_midsem:
         v = field("has_midsem")
-        out["no midsem"] = ((UNKNOWN, "no handout data") if v is None else
-                            (YES, "no midsem in evaluation scheme") if v is False else
-                            (NO, "has a midsem"))
+        mid_rows = [c for c in (e or {}).get("evaluation", []) if MID_ROW.search(c["component"])]
+        if v is None:
+            out["no midsem"] = (UNKNOWN, "no handout data")
+        elif v is True:
+            out["no midsem"] = (NO, "has a midsem")
+        elif mid_rows:       # e.g. 'Mid-semester Evaluation for Project': not an exam, but not nothing
+            out["no midsem"] = (PARTLY, "no midsem exam, but the evaluation has: " + ", ".join(
+                f"{c['component']} {c['weight_percent']}%" for c in mid_rows))
+        else:
+            out["no midsem"] = (YES, "no midsem in evaluation scheme")
     if pref.avoid_quizzes:
         v = field("has_quizzes")
         out["no quizzes"] = ((UNKNOWN, "not stated") if v is None else
@@ -76,10 +92,13 @@ def check_constraints(pref: Preferences, h):
             out["no attendance requirement"] = (NO, f"attendance carries marks: {text}")
         elif text is None:
             out["no attendance requirement"] = (UNKNOWN, "handout does not mention attendance")
-        elif EXPECTS_ATTENDANCE.search(text):
-            out["no attendance requirement"] = (PARTLY, f"no attendance marks, but handout says: {text}")
         else:
-            out["no attendance requirement"] = (YES, f"no attendance marks; handout says: {text}")
+            lead = ("no attendance marks" if marks is False
+                    else "handout doesn't say attendance carries marks")
+            if EXPECTS_ATTENDANCE.search(text) and not NO_ATTENDANCE_RULE.search(text):
+                out["no attendance requirement"] = (PARTLY, f"{lead}, but handout says: {text}")
+            else:
+                out["no attendance requirement"] = (YES, f"{lead}; handout says: {text}")
     if pref.lenient_makeup:
         avail, prior = field("makeup_available"), field("makeup_needs_prior_permission")
         if avail is False:
@@ -127,8 +146,12 @@ def score_interests(interests, candidates, handouts):
     """code -> (relevance 0-10, reason). Without interests every course scores 5."""
     if not interests:
         return {c["code"]: (5, "") for c in candidates}
+    if len(candidates) > MAX_TO_SCORE:
+        # keep one LLM call, but choose which courses reach it by keyword match, not list order
+        pre = keyword_scores(interests, candidates, handouts)
+        candidates = sorted(candidates, key=lambda c: -pre[c["code"]][0])[:MAX_TO_SCORE]
     lines = []
-    for c in candidates[:MAX_TO_SCORE]:
+    for c in candidates:
         h = handouts.get(c["code"])
         topics = ", ".join(h["extracted"]["topics"][:6]) if h else ""
         lines.append(f"{c['code']} | {c['title']} | {topics}")
@@ -173,7 +196,7 @@ def recommend(student, pref: Preferences, catalog=None, handouts=None):
                          + " requirement through CSP courses in years 3-4. Anything below would be "
                          "an extra course on top of your plan.")
 
-    cats = [pref.category] if pref.category else ["CDC", "DEL", "HUEL", "OPEL"]
+    cats = [pref.category] if pref.category else ["CDC", "GIR", "DEL", "HUEL", "OPEL"]
     if pref.category in ("DEL", "HUEL", "OPEL") and rem[f"{pref.category}_units"] == 0:
         notes.append(f"Your {pref.category} requirement is already complete.")
     candidates = [c for cat in cats for c in eligible.get(cat, [])]
@@ -201,6 +224,9 @@ def recommend(student, pref: Preferences, catalog=None, handouts=None):
         kept.append((c, checks, fit))
 
     scores = score_interests(pref.interests, [c for c, _, _ in kept], handouts)
+    if pref.interests and len(kept) > MAX_TO_SCORE:
+        notes.append(f"{len(kept)} courses were eligible; the {MAX_TO_SCORE} closest by keyword were "
+                     "scored for interest match. Name a category (DEL, HUEL, OPEL) to narrow the search.")
 
     results = []
     for c, checks, fit in kept:
@@ -218,6 +244,7 @@ def recommend(student, pref: Preferences, catalog=None, handouts=None):
             rank += int(share[1]) / 10 if share else -3
         cat = c["counts_as"]
         left = (f"{len(rem['CDC_courses'])} CDCs left" if cat == "CDC"
+                else f"{len(rem['GIR_courses'])} general requirements left" if cat == "GIR"
                 else f"{rem[cat + '_units']} {cat} units left")
         results.append({
             "code": c["code"], "title": c["title"], "units": c["units"],
@@ -232,6 +259,9 @@ def recommend(student, pref: Preferences, catalog=None, handouts=None):
             "_rank": rank,
         })
     results.sort(key=lambda r: -r["_rank"])
+    if len(results) > 1 and offered:
+        notes.append("Each suggestion is checked against your current courses, not against the other "
+                     "suggestions, so two of them may clash with each other.")
     if clashes:
         notes.append(f"{len(clashes)} course(s) removed because of timetable or exam clashes, e.g. "
                      + "; ".join(clashes[:3]))

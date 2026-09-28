@@ -240,13 +240,40 @@ Most handouts say nothing about attendance. So "an OPEL with no attendance requi
 can only be answered with confidence for about half the courses; for the rest the system
 must say "not stated in the handout" — which is what the task asks for.
 
-## 10. Known gaps
+## 10. Pre-submission review
+
+Before submitting, I had a separate Claude Code session review the whole repo read-only and
+report problems with evidence. Fixes applied from it:
+
+- **The app didn't run on Python 3.10/3.11**, although the README says 3.10+: one f-string
+  nested the same quote type, which only Python 3.12+ accepts. Moved into a helper function.
+- **"No attendance requirement" was still too loose.** The example question returned courses
+  marked "yes" whose own evidence said "a minimum of 60% attendance is required to appear for
+  the compre". The check now also catches thresholds, "have to", "governed by", debarring and
+  shortage wording, "taken into consideration", "adhere to" and "sign attendance", and still
+  treats "attendance is optional" or "no marks for attendance" as a real yes.
+- **General requirements (GIR) were never recommended.** The rules engine found them (e.g.
+  BITS F225 due and offered) but the recommender only searched CDC/DEL/HUEL/OPEL. GIR is now
+  searched too, and "suggest a GIR" is understood.
+- **Interest search only looked at the first 150 eligible courses** (of 453 with no category), in
+  list order. The 150 sent to the LLM are now chosen by keyword match, and the answer says so.
+- **Suggestions can clash with each other** (each is checked against current courses only). This
+  was in the WRITEUP but not the app; the answer now says it.
+- Smaller fixes: example buttons now read left to right; the EEE ledger no longer shows
+  "0 / 14" beside "Remaining CDCs (15)"; attendance evidence no longer claims "no attendance
+  marks" when the handout doesn't say either way.
+- **"No midsem" for BITS F471** said yes above an evaluation row "Mid-semester Evaluation for
+  Project 25%". It's now "partly: no midsem exam, but the evaluation has a mid-semester
+  project evaluation", which is what a student actually needs to know.
+
+## 11. Known gaps
 
 - Prerequisites not verified (data missing).
 - Equivalent-course table not parsed yet.
-- Only B.E. Computer Science configured.
+- 17 single-degree B.E. programmes and BITS-CSP (2025) are configured; dual degrees, B.Pharm,
+  M.Sc. and BBA are not.
 - Two scanned handouts have no data.
-- The GIR "either ECON F211 or MGTS F211" rule is counted correctly but displayed as two
-  separate remaining courses.
+- The GIR "either ECON F211 or MGTS F211" rule shows correctly in the dashboard, but the CLI
+  (`core/rules.py`) still prints both as remaining.
 - Eligible CDC lists include later-year courses; ranking should prefer courses that fit
   the student's year in the semester-wise pattern.

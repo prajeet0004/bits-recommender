@@ -12,7 +12,7 @@ from core import llm
 
 
 class Preferences(BaseModel):
-    category: Optional[Literal["CDC", "DEL", "HUEL", "OPEL"]] = Field(
+    category: Optional[Literal["CDC", "GIR", "DEL", "HUEL", "OPEL"]] = Field(
         description="Requirement category the student asked for. null if not specified.")
     interests: List[str] = Field(
         description="Subject areas the student wants, e.g. ['machine learning', 'finance']. Empty if none.")
@@ -32,8 +32,9 @@ class Preferences(BaseModel):
 PROMPT = """A BITS Pilani student asked a course-selection question.
 Convert it into the preference form. Only fill what the student actually asked for;
 leave everything else null or empty. Category meanings:
-CDC = compulsory discipline core, DEL = discipline elective, HUEL = humanities elective,
-OPEL = open elective (any other course).
+CDC = compulsory discipline core, GIR = general institutional requirement (first/second-year
+foundation courses like Environmental Studies or Principles of Economics),
+DEL = discipline elective, HUEL = humanities elective, OPEL = open elective (any other course).
 
 Question: {q}
 """

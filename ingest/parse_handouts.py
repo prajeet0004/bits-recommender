@@ -133,8 +133,10 @@ def validate(rec, file_code):
     elif not 95 <= sum(weights) <= 105:
         issues.append(f"evaluation weights sum to {sum(weights):.0f}, not 100")
 
-    names = " ".join(c["component"].lower() for c in rec["evaluation"])
-    mid_in_table = bool(re.search(r"mid", names))
+    # a midsem EXAM row: mentions 'mid' but isn't a project review
+    # ('Mid-semester Evaluation for Project' in BITS F471 is not a midsem exam)
+    mid_in_table = any(re.search(r"mid", c["component"], re.I) and not re.search(r"project", c["component"], re.I)
+                       for c in rec["evaluation"])
     if rec["has_midsem"] is not None and rec["has_midsem"] != mid_in_table:
         issues.append(f"has_midsem={rec['has_midsem']} but evaluation table says {mid_in_table}")
     return issues
