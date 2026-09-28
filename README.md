@@ -146,7 +146,9 @@ Attendance is stated in only 45% of handouts. For the rest, the system answers
 
 - **Prerequisites are not verified.** The timetable points to an external website, and the
   bulletin lists prerequisites for only a few courses. Every recommendation says so.
-- **Supported programmes:** the 17 single-degree B.E. programmes. Dual degrees, B.Pharm,
+- **Supported programmes:** the 17 single-degree B.E. programmes, plus **B.E. Computer Science
+  (BITS-CSP), 2025 batch only**, configured from `BITS-CSP_CS_Equivalency_Mapping.pdf` (a document
+  supplied separately, not part of the task dataset; keep it in `data/sources/`). Dual degrees, B.Pharm,
   M.Sc. and BBA are not configured; choosing one gives a clear "not supported" message.
   Adding a programme means adding one entry to `programmes.json`, no code changes.
 - **Programme data cross-check.** For 7 programmes the system shows a warning, found by

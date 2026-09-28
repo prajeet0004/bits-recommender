@@ -59,7 +59,7 @@ p.sub { color: var(--muted); margin: 0 0 1.6rem 0; font-size: 1rem; }
 /* requirement ledger: the one bold element */
 .ledger { background: var(--card); border: 1px solid var(--line); border-radius: 10px;
   padding: 1.1rem 1.3rem .6rem; margin-bottom: 1rem; }
-.lrow { display: grid; grid-template-columns: 9.5rem 1fr 7.5rem; align-items: center;
+.lrow { display: grid; grid-template-columns: 9.5rem 1fr 12rem; white-space: nowrap; align-items: center;
   gap: 1rem; padding: .55rem 0; border-bottom: 1px solid #EEF1F5; }
 .lrow:last-child { border-bottom: none; }
 .lname { font-weight: 600; color: var(--ink); }
@@ -67,6 +67,10 @@ p.sub { color: var(--muted); margin: 0 0 1.6rem 0; font-size: 1rem; }
 .track { display: flex; gap: 3px; height: 12px; }
 .seg { flex: 1; border-radius: 2px; background: #E4E8EF; }
 .seg.done { background: var(--blue); }
+.seg.plan { background: repeating-linear-gradient(135deg, #9FB3DD 0 4px, #C9D5EE 4px 8px); }
+.legend { font-size: .78rem; color: var(--muted); margin: -.3rem 0 .6rem; }
+.legend i { display: inline-block; width: 14px; height: 9px; border-radius: 2px; margin: 0 .3rem 0 .8rem;
+  vertical-align: middle; }
 .lnum { font-family: 'Newsreader', Georgia, serif; font-size: 1.35rem; text-align: right; color: var(--ink); }
 .lnum span { font-family: 'Figtree', sans-serif; font-size: .8rem; color: var(--muted); }
 
@@ -220,21 +224,29 @@ req = cat.programme(prog)[0]["requirements"]
 rem = state["remaining"]
 
 
-def row(label, sub, done, total, unit):
+def row(label, sub, done, total, unit, planned=0):
     done = max(0, min(done, total))
-    segs = "".join(f'<div class="seg{" done" if i < done else ""}"></div>' for i in range(total))
+    planned = max(0, min(planned, total - done))
+    segs = "".join(f'<div class="seg{" done" if i < done else " plan" if i < done + planned else ""}"></div>'
+                   for i in range(total))
+    extra = f"<span> +{planned} planned</span>" if planned else ""
     return (f'<div class="lrow"><div class="lname">{label}<small>{sub}</small></div>'
             f'<div class="track">{segs}</div>'
-            f'<div class="lnum">{done}<span> / {total} {unit}</span></div></div>')
+            f'<div class="lnum">{done}<span> / {total} {unit}</span>{extra}</div></div>')
 
 
+plan = state.get("planned") or {}
 cdc_total = req["CDC"]["courses"]
 cdc_done = cdc_total - len(rem["CDC_courses"])
-ledger = [row("CDC", "discipline core", cdc_done, cdc_total, "courses")]
+ledger = [row("CDC", "discipline core", cdc_done, cdc_total, "courses", len(plan.get("CDC_courses", [])))]
 for k, sub in (("DEL", "discipline electives"), ("HUEL", "humanities electives"), ("OPEL", "open electives")):
     t = req[k]["units"]
-    ledger.append(row(k, sub, t - rem[f"{k}_units"], t, "units"))
+    ledger.append(row(k, sub, t - rem[f"{k}_units"], t, "units", plan.get(f"{k}_units", 0)))
 st.markdown('<div class="ledger">' + "".join(ledger) + "</div>", unsafe_allow_html=True)
+if plan:
+    st.markdown('<div class="legend"><i style="background:#2B4C9B"></i>done or in progress'
+                '<i style="background:repeating-linear-gradient(135deg,#9FB3DD 0 4px,#C9D5EE 4px 8px)"></i>'
+                'planned at CentraleSupélec</div>', unsafe_allow_html=True)
 st.caption("Counts include courses you're taking now. Sources: " +
            "; ".join(f"{k} {v}" for k, v in state["sources"].items()))
 
@@ -250,6 +262,27 @@ with st.expander(f"Remaining CDCs ({len(rem['CDC_courses'])}) and general requir
 
 for w in state["warnings"]:
     st.markdown(f'<div class="warn">{html.escape(w)}</div>', unsafe_allow_html=True)
+
+if state.get("fixed_pattern"):
+    fp = state["fixed_pattern"]
+    with st.expander("Your BITS-CSP plan", expanded=True):
+        for n in state["programme_notes"]:
+            st.write("• " + n)
+        this, nxt = fp.get(str(sem)), fp.get(str(int(sem) + 1))
+        if this:
+            st.write(f"**Semester {sem} (fixed):** " + ", ".join(this))
+        if nxt:
+            st.write(f"**Semester {int(sem) + 1} (fixed):** " + ", ".join(nxt))
+        left = state["remaining_after_plan"]
+        st.write("**Still to take at BITS after the plan:** "
+                 + (", ".join(left["CDC_courses"]) or "no CDCs")
+                 + "; electives left: "
+                 + ", ".join(f"{k} {left[k + '_units']} units" for k in ("DEL", "HUEL", "OPEL")))
+        rows = [{"BITS course": e["code"], "counts as": e["counts_as"], "via CSP course": e["via"],
+                 "year": e["year"]} for e in plan.get("items", [])]
+        if rows:
+            st.dataframe(rows, hide_index=True, use_container_width=True)
+        st.caption("Source: " + fp.get("_source", ""))
 
 
 # ---------- ask ----------

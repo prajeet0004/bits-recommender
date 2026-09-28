@@ -1043,5 +1043,241 @@
   "needs_verification": [
    "semester pattern uses different first-year codes (e.g. MATH F111, ME F112); standard GIR used, may be wrong for this programme."
   ]
+ },
+ "B.E. Computer Science (BITS-CSP)": {
+  "course_list_key": "COMPUTER SCIENCE",
+  "discipline_prefixes": [
+   "CS"
+  ],
+  "requirements": {
+   "CDC": {
+    "units": 48,
+    "courses": 14,
+    "source": "bulletin.pdf p.217"
+   },
+   "DEL": {
+    "units": 12,
+    "courses": 4,
+    "source": "bulletin.pdf p.217"
+   },
+   "HUEL": {
+    "units": 8,
+    "courses": 3,
+    "source": "bulletin.pdf p.209 (IV-1)"
+   },
+   "OPEL": {
+    "units": 15,
+    "source": "derived: 129 - 54 - (48+12), bulletin.pdf p.209 (IV-1); CSP plan: 5 open electives via CSP equivalents (BITS-CSP_CS_Equivalency_Mapping.pdf (supplied separately by the student; not part of the task dataset))"
+   }
+  },
+  "gir_courses": {
+   "_source": "BITS-CSP_CS_Equivalency_Mapping.pdf (supplied separately by the student; not part of the task dataset), Table 1, years I-II",
+   "Science Foundation": [
+    "BIO F101",
+    "CHEM F101",
+    "PHY F101"
+   ],
+   "Mathematics Foundation": [
+    "MATH F101",
+    "MATH F102",
+    "MATH F113",
+    "MATH F211"
+   ],
+   "Engineering Foundation": [
+    "EEE F111",
+    "BITS F111"
+   ],
+   "Technical Arts": [
+    "CS F111",
+    "BITS F234",
+    "ME F112",
+    "BITS F112"
+   ],
+   "General Awareness": [
+    "BITS F101",
+    "BITS K101",
+    "BITS F102",
+    "BITS F225",
+    [
+     "ECON F211",
+     "MGTS F211"
+    ]
+   ]
+  },
+  "admission_years": [
+   2025
+  ],
+  "fixed_pattern": {
+   "_source": "BITS-CSP_CS_Equivalency_Mapping.pdf (supplied separately by the student; not part of the task dataset), Table 1 (p.2)",
+   "3": [
+    "MATH F211",
+    "CS F213",
+    "CS F214",
+    "CS F215",
+    "CS F222",
+    "CS F320"
+   ],
+   "4": [
+    "ECON F211 or MGTS F211",
+    "CS F211",
+    "CS F212",
+    "CS F241",
+    "BITS F225"
+   ],
+   "summer": [
+    "BITS F221"
+   ]
+  },
+  "planned_equivalents": [
+   {
+    "code": "CS F351",
+    "counts_as": "CDC",
+    "via": "Theory of Computation",
+    "where": "CSP",
+    "year": 3,
+    "note": "BITS-CSP_CS_Equivalency_Mapping.pdf (supplied separately by the student; not part of the task dataset), symbol 25"
+   },
+   {
+    "code": "CS F372",
+    "counts_as": "CDC",
+    "via": "Operating Systems",
+    "where": "CSP",
+    "year": 3,
+    "note": "BITS-CSP_CS_Equivalency_Mapping.pdf (supplied separately by the student; not part of the task dataset), symbol 26"
+   },
+   {
+    "code": "CS F301",
+    "counts_as": "CDC",
+    "via": "Principles of Programming Languages",
+    "where": "CSP",
+    "year": 3,
+    "note": "BITS-CSP_CS_Equivalency_Mapping.pdf (supplied separately by the student; not part of the task dataset), symbol 27"
+   },
+   {
+    "code": "CS F342",
+    "counts_as": "CDC",
+    "via": "Computer Architectures and Software Execution Process",
+    "where": "CSP",
+    "year": 3,
+    "note": "BITS-CSP_CS_Equivalency_Mapping.pdf (supplied separately by the student; not part of the task dataset), symbol 28"
+   },
+   {
+    "code": "CS F363",
+    "counts_as": "CDC",
+    "via": "Compilers",
+    "where": "CSP",
+    "year": 3,
+    "note": "BITS-CSP_CS_Equivalency_Mapping.pdf (supplied separately by the student; not part of the task dataset), symbol 32"
+   },
+   {
+    "code": "CS F364",
+    "counts_as": "CDC",
+    "via": "Advanced Algorithms",
+    "where": "CSP",
+    "year": 3,
+    "note": "BITS-CSP_CS_Equivalency_Mapping.pdf (supplied separately by the student; not part of the task dataset), symbol 33"
+   },
+   {
+    "code": "CS F303",
+    "counts_as": "CDC",
+    "via": "Computer Networks",
+    "where": "CSP",
+    "year": 3,
+    "note": "BITS-CSP_CS_Equivalency_Mapping.pdf (supplied separately by the student; not part of the task dataset), symbol 34"
+   },
+   {
+    "code": "CS F425",
+    "counts_as": "DEL",
+    "via": "Deep Learning",
+    "where": "CSP",
+    "year": 3,
+    "note": "BITS-CSP_CS_Equivalency_Mapping.pdf (supplied separately by the student; not part of the task dataset), symbol 30"
+   },
+   {
+    "code": "BITS F464",
+    "counts_as": "DEL",
+    "via": "Foundations of Machine Learning and Neural Networks",
+    "where": "CSP",
+    "year": 3,
+    "note": "BITS-CSP_CS_Equivalency_Mapping.pdf (supplied separately by the student; not part of the task dataset), symbol 35"
+   },
+   {
+    "code": "CS F317",
+    "counts_as": "DEL",
+    "via": "Reinforcement Learning",
+    "where": "CSP",
+    "year": 3,
+    "note": "BITS-CSP_CS_Equivalency_Mapping.pdf (supplied separately by the student; not part of the task dataset), symbol 36"
+   },
+   {
+    "code": "CS F407",
+    "counts_as": "OPEL",
+    "via": "Introduction to Artificial Intelligence",
+    "where": "CSP",
+    "year": 3,
+    "note": "BITS-CSP_CS_Equivalency_Mapping.pdf (supplied separately by the student; not part of the task dataset), symbol 29"
+   },
+   {
+    "code": "CS G527",
+    "counts_as": "OPEL",
+    "via": "Fundamentals of Cloud Computing",
+    "where": "CSP",
+    "year": 4,
+    "note": "BITS-CSP_CS_Equivalency_Mapping.pdf (supplied separately by the student; not part of the task dataset), symbol 38"
+   },
+   {
+    "code": "BITS F459",
+    "counts_as": "OPEL",
+    "via": "Computer Vision",
+    "where": "CSP",
+    "year": 4,
+    "note": "BITS-CSP_CS_Equivalency_Mapping.pdf (supplied separately by the student; not part of the task dataset), symbol 43"
+   },
+   {
+    "code": "CS F444",
+    "counts_as": "OPEL",
+    "via": "Real Time Systems",
+    "where": "CSP",
+    "year": 4,
+    "note": "BITS-CSP_CS_Equivalency_Mapping.pdf (supplied separately by the student; not part of the task dataset), symbol 44"
+   },
+   {
+    "code": "CS F316",
+    "counts_as": "OPEL",
+    "via": "Quantum Computing",
+    "where": "CSP",
+    "year": 4,
+    "note": "BITS-CSP_CS_Equivalency_Mapping.pdf (supplied separately by the student; not part of the task dataset), symbol 45"
+   },
+   {
+    "code": "BITS F419",
+    "counts_as": "HUEL",
+    "via": "Leading and Managing Teams",
+    "where": "CSP",
+    "year": 4,
+    "note": "BITS-CSP_CS_Equivalency_Mapping.pdf (supplied separately by the student; not part of the task dataset), symbol 41"
+   },
+   {
+    "code": "HSS F346",
+    "counts_as": "HUEL",
+    "via": "International Negotiations",
+    "where": "CSP",
+    "year": 4,
+    "note": "BITS-CSP_CS_Equivalency_Mapping.pdf (supplied separately by the student; not part of the task dataset), symbol 42"
+   },
+   {
+    "code": "HSS F266",
+    "counts_as": "HUEL",
+    "via": "Final Year Project",
+    "where": "CSP",
+    "year": 4,
+    "note": "BITS-CSP_CS_Equivalency_Mapping.pdf (supplied separately by the student; not part of the task dataset), symbol 46"
+   }
+  ],
+  "notes": [
+   "BITS-CSP 2+2: years 1-2 at BITS follow a fixed pattern; years 3-4 at CentraleSup\u00e9lec, where the remaining CDCs and all other electives are covered by equivalent courses. CS F320 in semester 3 is the first DEL.",
+   "Progression to CSP needs a CGPA of at least 5.5 after year 2.",
+   "Only the 2025 batch is configured, from a mapping document supplied by the student."
+  ]
  }
 }

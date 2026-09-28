@@ -1,0 +1,13 @@
+{
+ "_note": "EXAMPLE BITS-CSP student for testing, not a real person. Admitted 2025, semester 3, following the CSP pattern.",
+ "campus": "Pilani",
+ "admission_year": 2025,
+ "programme": "B.E. Computer Science (BITS-CSP)",
+ "current_semester": 3,
+ "completed": ["BIO F101", "CHEM F101", "MATH F101", "PHY F101", "BITS F234", "BITS F101", "BITS K101",
+               "ME F112", "BITS F111", "CS F111", "EEE F111", "MATH F102", "MATH F113", "BITS F112", "BITS F102"],
+ "current": ["MATH F211", "CS F213", "CS F214", "CS F215", "CS F222", "CS F320"],
+ "sections": {},
+ "minor": null,
+ "interests": ["machine learning"]
+}

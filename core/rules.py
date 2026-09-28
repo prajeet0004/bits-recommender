@@ -111,6 +111,9 @@ def units_of(code, catalog, prog_list):
 def classify(code, prog_rules, prog_list, catalog, gir):
     """Which category a course counts towards for this programme.
     Order matters: CDC > GIR > DEL > HUEL > OPEL."""
+    overrides = {e["code"]: e["counts_as"] for e in prog_rules.get("planned_equivalents", [])}
+    if code in overrides:                        # e.g. BITS-CSP counts CS F407 as an OPEL
+        return overrides[code]
     core = {c["code"] for c in prog_list["core"]}
     dels = {c["code"] for c in prog_list["electives"]}
     if code in core:
@@ -127,6 +130,10 @@ def classify(code, prog_rules, prog_list, catalog, gir):
 
 def academic_state(student, catalog):
     prog_rules, prog_list = catalog.programme(student["programme"])
+    years = prog_rules.get("admission_years")
+    if years and student["admission_year"] not in years:
+        raise UnsupportedProgramme(f"{student['programme']} is only configured for the "
+                                   f"{', '.join(map(str, years))} batch.")
     req = prog_rules["requirements"]
     gir = gir_codes(prog_rules)
 
@@ -155,7 +162,26 @@ def academic_state(student, catalog):
         "GIR_courses": sorted(c for c in gir if c not in taken
                               and not ({"ECON F211", "MGTS F211"} & set(taken) and c in ("ECON F211", "MGTS F211"))),
     }
+    # Programmes with a fixed plan (BITS-CSP): what the plan will cover later
+    planned = {"CDC_courses": [], "DEL_units": 0, "HUEL_units": 0, "OPEL_units": 0, "items": []}
+    for e in prog_rules.get("planned_equivalents", []):
+        if e["code"] in taken:
+            continue
+        planned["items"].append(e)
+        if e["counts_as"] == "CDC":
+            planned["CDC_courses"].append(e["code"])
+        else:
+            planned[f"{e['counts_as']}_units"] += units_of(e["code"], catalog, prog_list) or 3
+    after = {"CDC_courses": [c for c in remaining["CDC_courses"] if c not in planned["CDC_courses"]]}
+    for k in ("DEL", "HUEL", "OPEL"):
+        after[f"{k}_units"] = max(0, remaining[f"{k}_units"] - planned[f"{k}_units"])
+    fixed = prog_rules.get("fixed_pattern", {})
+
     return {"counted_as": counted, "units_done": done_units, "remaining": remaining,
+            "planned": planned if planned["items"] else None,
+            "remaining_after_plan": after if planned["items"] else None,
+            "fixed_pattern": fixed or None,
+            "programme_notes": prog_rules.get("notes", []),
             "units_unknown_for": unknown_units, "sources": {k: v["source"] for k, v in req.items()},
             "warnings": catalog.programme_warnings(student["programme"])}
 
@@ -172,6 +198,13 @@ def course_notes(code):
     if num in PROJECT_NUMBERS:
         notes.append("project course: max 3 as OPEL, max 5 across electives (bulletin p.333)")
     return notes
+
+
+def plan_note(code, state):
+    for e in (state.get("planned") or {}).get("items", []):
+        if e["code"] == code:
+            return [f"your {e['where']} plan already covers this in year {e['year']} via '{e['via']}'"]
+    return []
 
 
 def eligible_courses(student, catalog, state=None):
@@ -200,7 +233,7 @@ def eligible_courses(student, catalog, state=None):
             "units": units_of(code, catalog, prog_list),
             "counts_as": cat,
             "prerequisites": "not verified",
-            "notes": course_notes(code),
+            "notes": course_notes(code) + plan_note(code, state),
             "source": tt["source"],
         })
     if rem["OPEL_units"] == 0:

@@ -163,6 +163,15 @@ def recommend(student, pref: Preferences, catalog=None, handouts=None):
     rem = state["remaining"]
     offered = catalog.offered(student["admission_year"])
     notes = [f"Programme data: {w}" for w in state["warnings"]]
+    after = state.get("remaining_after_plan")
+    if after:
+        full = [k for k in ("DEL", "HUEL", "OPEL") if after[f"{k}_units"] == 0]
+        asked = [pref.category] if pref.category else full
+        if any(k in full for k in asked):
+            notes.append("Your BITS-CSP plan already covers your "
+                         + "/".join(k for k in asked if k in full)
+                         + " requirement through CSP courses in years 3-4. Anything below would be "
+                         "an extra course on top of your plan.")
 
     cats = [pref.category] if pref.category else ["CDC", "DEL", "HUEL", "OPEL"]
     if pref.category in ("DEL", "HUEL", "OPEL") and rem[f"{pref.category}_units"] == 0:

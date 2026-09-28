@@ -128,6 +128,22 @@ Following up the Environmental & Sustainability warning showed the cause was the
 programmes' discipline requirements with sharing rules (IV-1), which needs real logic,
 not just data, so they are out of scope and give a clear "not supported" message.
 
+### BITS-CSP (2+2 with CentraleSupélec)
+
+The one programme that isn't in the task dataset: B.E. Computer Science under BITS-CSP, where
+years 1-2 are at BITS on a fixed pattern and years 3-4 at CentraleSupélec. Its mapping document
+(added by me, cited in every record) says which CSP courses count as which BITS requirement,
+and sometimes *overrides* the normal category: CS F407, CS G527, BITS F459, CS F444 and CS F316
+are DELs in the CS list but count as **open electives** for BITS-CSP. So the programme entry
+has `planned_equivalents` (with the category each counts as), and `classify()` checks them first.
+
+The rules engine then reports two things: what's remaining now, and what's left **after the
+plan**. For a semester-3 BITS-CSP student, that's only CS F211, CS F212 and CS F241 (all fixed
+in semester 4); every elective requirement is covered at CSP. The dashboard shows planned
+units as hatched segments on the ledger and lists the plan, and recommendations for an already-
+covered category say that any course would be an extra on top of the plan. Only the 2025 batch
+is configured, and another batch gets a clear "not configured" message.
+
 ## 7. Query layer
 
 A question goes through five steps, and the LLM is used in exactly two:
